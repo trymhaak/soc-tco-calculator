@@ -1,3 +1,7 @@
+/**
+ * @module shared/components/BrandDivider
+ * @description Horizontal gradient line (cyan to light purple) per SoftwareOne brand guidelines.
+ */
 import { C } from '../theme'
 
 export default function BrandDivider() {

@@ -1,3 +1,13 @@
+/**
+ * @module shared/components/SoftwareOneLogo
+ * @description Official SoftwareOne SVG wordmark, extracted from softwareone.com.
+ * Two-path SVG: the "one" letterforms and the "software" text, independently colorable.
+ *
+ * @param {Object} props
+ * @param {number} [props.height=32] - Logo height in pixels.
+ * @param {string} [props.color=C.black] - Fill color for the "one" shapes.
+ * @param {string} [props.softwareColor=C.white] - Fill color for the "software" text.
+ */
 import { C } from '../theme'
 
 export default function SoftwareOneLogo({ height = 32, color = C.black, softwareColor = C.white }) {

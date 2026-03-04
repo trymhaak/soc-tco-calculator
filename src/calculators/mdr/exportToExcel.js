@@ -1,3 +1,15 @@
+/**
+ * @module calculators/mdr/exportToExcel
+ * @description Generates and downloads a branded Excel workbook (.xlsx) from calculator state.
+ *
+ * The workbook contains two sheets:
+ * - **Tilbud** — customer-facing offer with SKU codes, quantities, and annual totals.
+ * - **Intern** — internal discount breakdown (not to be shared with customers).
+ *
+ * Uses ExcelJS for workbook creation and the shared `excel/helpers` for consistent
+ * formatting (borders, colors, number formats). Downloads automatically via a
+ * temporary Blob URL.
+ */
 import ExcelJS from 'exceljs'
 import {
   XL_COLORS, NOK_FMT,
@@ -7,9 +19,20 @@ import {
 import { SKU_MAP, EXCEL_HEADERS } from './config'
 
 /**
- * Export calculator data to a formatted Excel workbook with two sheets:
- * - "Tilbud" (customer-facing offer)
- * - "Intern" (internal discount details)
+ * Build and download the MDR offer workbook.
+ *
+ * @async
+ * @param {Object} data - Destructured calculator state.
+ * @param {{listTotal: number, total: number, details: Array}} data.m365 - M365 section totals.
+ * @param {{listTotal: number, total: number, details: Array}} data.azure - Azure section totals.
+ * @param {boolean} data.includeAzure - Whether Azure workloads are included.
+ * @param {number} data.m365Discount - M365 discount percentage (0–20).
+ * @param {number} data.azureDiscount - Azure discount percentage (0–20).
+ * @param {number} data.offerTotal - Combined annual offer total.
+ * @param {number} data.listTotal - Combined annual list-price total.
+ * @param {number} data.totalDiscountKr - Total discount in NOK.
+ * @param {number} data.totalDiscountPct - Total discount as a percentage.
+ * @throws Displays an alert to the user if workbook generation fails.
  */
 export async function exportToExcel({
   m365, azure, includeAzure,

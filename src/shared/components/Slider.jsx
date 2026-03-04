@@ -1,20 +1,60 @@
+/**
+ * @module shared/components/Slider
+ * @description Range slider with editable value display and optional non-linear scale.
+ *
+ * Features:
+ * - Click the displayed value to type an exact number
+ * - Non-linear scale via `scale` prop (quadratic gives more precision at low end)
+ * - Configurable track/thumb color via CSS custom property `--thumb-color`
+ * - Compact mode for tighter layouts
+ *
+ * @example
+ * // Quadratic scale for better 100–1000 precision on a 50–10000 range
+ * <Slider label="Employees" value={500} onChange={set} min={50} max={10000} step={50} scale={2} />
+ *
+ * @example
+ * // Compact linear slider with unit label and custom color
+ * <Slider label="VMs" value={5} onChange={set} min={0} max={100} step={1}
+ *   unit="VM-er" compact color={C.darkBlue} />
+ */
 import { useState } from 'react'
 import { C, FLEX_BETWEEN, fmt } from '../theme'
 
+/** Internal slider resolution (number of discrete positions on the HTML range input). */
 const RESOLUTION = 1000
 
+/**
+ * @param {Object} props
+ * @param {string} props.label - Display label above the slider.
+ * @param {number} props.value - Current value.
+ * @param {(value: number) => void} props.onChange - Called with the new value on change.
+ * @param {number} props.min - Minimum allowed value.
+ * @param {number} props.max - Maximum allowed value.
+ * @param {number} props.step - Snap increment (values are always rounded to this).
+ * @param {string} [props.unit] - Optional unit label shown after the value (e.g. "VM-er").
+ * @param {number} [props.scale=1] - Scale exponent. 1 = linear, 2 = quadratic (more low-end resolution).
+ * @param {boolean} [props.compact=false] - Reduces vertical spacing and font size.
+ * @param {string} [props.color=C.purple] - Track fill color and thumb color.
+ */
 export default function Slider({ label, value, onChange, min, max, step, unit, scale = 1, compact = false, color = C.purple }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
   const range = max - min
 
-  // Non-linear scale: scale=1 → linear, scale=2 → quadratic (more resolution at low end)
+  /**
+   * Map an actual value to a slider position (0–RESOLUTION).
+   * With scale > 1, low values occupy more of the track.
+   */
   const valueToPos = (v) => {
     if (range === 0) return 0
     const t = Math.max(0, Math.min(1, (v - min) / range))
     return Math.round(Math.pow(t, 1 / scale) * RESOLUTION)
   }
 
+  /**
+   * Map a slider position (0–RESOLUTION) back to an actual value, snapped to step.
+   * Inverse of valueToPos: applies the scale exponent, then snaps.
+   */
   const posToValue = (p) => {
     const t = p / RESOLUTION
     const raw = min + Math.pow(t, scale) * range
@@ -25,6 +65,7 @@ export default function Slider({ label, value, onChange, min, max, step, unit, s
   const pos = valueToPos(value)
   const pct = (pos / RESOLUTION) * 100
 
+  /** Commit the typed draft value: parse, clamp, snap, and exit edit mode. */
   const commitDraft = () => {
     setEditing(false)
     const parsed = parseInt(draft.replace(/\s/g, ''), 10)

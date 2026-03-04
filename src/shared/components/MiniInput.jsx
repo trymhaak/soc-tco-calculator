@@ -1,5 +1,18 @@
+/**
+ * @module shared/components/MiniInput
+ * @description Compact number input with label and optional unit.
+ * Currently unused in MDR calculator (replaced by compact Slider),
+ * but kept as a shared component for future calculators.
+ */
 import { C, FLEX_BETWEEN } from '../theme'
 
+/**
+ * @param {Object} props
+ * @param {string} props.label - Input label (left-aligned).
+ * @param {number} props.value - Current numeric value.
+ * @param {(value: number) => void} props.onChange - Called with the new value (clamped to >= 0).
+ * @param {string} [props.unit] - Optional unit label after the input.
+ */
 export default function MiniInput({ label, value, onChange, unit }) {
   return (
     <div style={{ ...FLEX_BETWEEN, padding: '8px 0' }}>

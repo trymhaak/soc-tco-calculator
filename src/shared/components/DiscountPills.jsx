@@ -1,7 +1,18 @@
+/**
+ * @module shared/components/DiscountPills
+ * @description Row of pill-shaped buttons for selecting a discount percentage.
+ */
 import { C } from '../theme'
 
+/** Available discount percentages. */
 export const DISCOUNT_OPTIONS = [0, 5, 10, 15, 20]
 
+/**
+ * @param {Object} props
+ * @param {number} props.value - Currently selected percentage (must match one of DISCOUNT_OPTIONS).
+ * @param {(pct: number) => void} props.onChange - Called with the selected percentage.
+ * @param {string} props.color - Background color for the active pill.
+ */
 export default function DiscountPills({ value, onChange, color }) {
   return (
     <div style={{ display: 'flex', gap: 4 }}>

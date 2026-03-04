@@ -1,4 +1,13 @@
-/* ─── SoftwareOne Brand Identity – Colour Palette ────────── */
+/**
+ * @module shared/theme
+ * @description SoftwareOne brand design tokens and reusable style fragments.
+ * Single source of truth for colors, spacing patterns, and number formatting.
+ *
+ * All colors follow the SoftwareOne Brand Identity Guidelines (07-2023).
+ * Digital font: Arial (brand fallback), defined in index.html.
+ */
+
+/** SoftwareOne brand colour palette. */
 export const C = {
   // Primary
   black:       '#000000',
@@ -20,7 +29,7 @@ export const C = {
   positiveBg:  'rgba(10,143,110,0.08)',
 }
 
-/* ─── Reusable style fragments ───────────────────────────── */
+/** Base card style — white background with subtle border and shadow. */
 export const CARD = {
   background: C.white,
   borderRadius: 8,
@@ -28,6 +37,7 @@ export const CARD = {
   boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
 }
 
+/** Uppercase section label style (11px, bold, tracked). */
 export const SECTION_LABEL = {
   fontSize: 11,
   fontWeight: 700,
@@ -35,12 +45,17 @@ export const SECTION_LABEL = {
   textTransform: 'uppercase',
 }
 
+/** Flex row with space-between alignment. */
 export const FLEX_BETWEEN = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
 }
 
-/* ─── Number formatting ──────────────────────────────────── */
+/**
+ * Format a number for Norwegian locale (nb-NO) with no decimals.
+ * @param {number} n - The number to format.
+ * @returns {string} Formatted string, e.g. "1 234".
+ */
 export const fmt = (n) =>
   new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 }).format(n)

@@ -1,5 +1,15 @@
+/**
+ * @module shared/components/Tabs
+ * @description Horizontal tab bar with underline indicator on the active tab.
+ */
 import { C } from '../theme'
 
+/**
+ * @param {Object} props
+ * @param {string} props.active - ID of the currently active tab.
+ * @param {(tabId: string) => void} props.onChange - Called with the selected tab ID.
+ * @param {Array<{id: string, label: string}>} props.tabs - Tab definitions.
+ */
 export default function Tabs({ active, onChange, tabs }) {
   return (
     <div style={{ display: 'flex', gap: 0, borderBottom: `2px solid ${C.gray30}`, marginBottom: 24 }}>

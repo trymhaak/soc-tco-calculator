@@ -1,5 +1,17 @@
+/**
+ * @module shared/components/DetailRow
+ * @description A label/value row used in the offer detail list.
+ * Supports an optional subtitle and a strikethrough original price.
+ */
 import { C, FLEX_BETWEEN } from '../theme'
 
+/**
+ * @param {Object} props
+ * @param {string} props.label - Line item name.
+ * @param {string} props.value - Formatted price string (right-aligned).
+ * @param {string} [props.sub] - Optional subtitle (e.g. "600 enheter x 45 kr/mnd").
+ * @param {string} [props.strikethrough] - Optional original price shown with line-through.
+ */
 export default function DetailRow({ label, value, sub, strikethrough }) {
   return (
     <div style={{ ...FLEX_BETWEEN, padding: '12px 0', borderBottom: `1px solid ${C.gray30}` }}>

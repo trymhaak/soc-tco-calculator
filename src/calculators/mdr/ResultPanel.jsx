@@ -1,8 +1,26 @@
+/**
+ * @module calculators/mdr/ResultPanel
+ * @description Right-column panel displaying the calculated offer and discount details.
+ *
+ * Contains two tabs (only one visible in presentation mode):
+ * - **Kundetilbud** — customer-facing breakdown with per-line annual costs,
+ *   optional strikethrough list prices, section subtotals, and a grand total.
+ * - **Rabatt & margin** — internal discount table showing list vs. offer per
+ *   line, total discount amount, and percentage (seller-only view).
+ *
+ * Each tab animates in via the `fadeIn` keyframe defined in `index.html`.
+ */
 import { C, CARD, SECTION_LABEL, FLEX_BETWEEN, fmt } from '../../shared/theme'
 import Tabs from '../../shared/components/Tabs'
 import DetailRow from '../../shared/components/DetailRow'
 import { FOOTNOTE } from './config'
 
+/**
+ * @param {Object} props
+ * @param {ReturnType<import('./useCalculator').useCalculator>} props.calc
+ *   The full return value of {@link useCalculator}, destructured internally.
+ * @returns {JSX.Element}
+ */
 export default function ResultPanel({ calc }) {
   const {
     activeTab, setActiveTab, tabDefs, presentationMode,

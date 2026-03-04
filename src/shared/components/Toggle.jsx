@@ -1,5 +1,19 @@
+/**
+ * @module shared/components/Toggle
+ * @description Accessible toggle switch using `<button role="switch">`.
+ * Keyboard-focusable and screen-reader friendly via aria-checked and aria-label.
+ *
+ * @example
+ * <Toggle checked={includeAzure} onChange={setIncludeAzure} label="Enable Azure" />
+ */
 import { C } from '../theme'
 
+/**
+ * @param {Object} props
+ * @param {boolean} props.checked - Whether the toggle is on.
+ * @param {(checked: boolean) => void} props.onChange - Called with the new state.
+ * @param {string} props.label - Accessible label (aria-label, not visually rendered).
+ */
 export default function Toggle({ checked, onChange, label }) {
   return (
     <button

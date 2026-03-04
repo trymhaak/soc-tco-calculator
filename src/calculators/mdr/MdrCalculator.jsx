@@ -1,3 +1,14 @@
+/**
+ * @module calculators/mdr/MdrCalculator
+ * @description Top-level orchestrator for the MDR calculator page.
+ *
+ * Responsibilities:
+ * - Initialises calculator state via {@link useCalculator}.
+ * - Renders the page chrome: header (logo, presentation toggle, export button),
+ *   hero section, and the two-column grid layout.
+ * - Delegates input controls to {@link InputPanel} and results to {@link ResultPanel}.
+ * - Wires the Excel export button to {@link exportToExcel}.
+ */
 import { C, SECTION_LABEL, FLEX_BETWEEN } from '../../shared/theme'
 import SoftwareOneLogo from '../../shared/components/SoftwareOneLogo'
 import BrandDivider from '../../shared/components/BrandDivider'
@@ -6,6 +17,14 @@ import { exportToExcel } from './exportToExcel'
 import InputPanel from './InputPanel'
 import ResultPanel from './ResultPanel'
 
+/**
+ * MDR calculator page component.
+ *
+ * Layout: full-viewport page with a fixed-width (380 px) input column on the left
+ * and a fluid result column on the right, max-width 1240 px centred.
+ *
+ * @returns {JSX.Element}
+ */
 export default function MdrCalculator() {
   const calc = useCalculator()
 

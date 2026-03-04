@@ -1,8 +1,27 @@
+/**
+ * @module calculators/mdr/InputPanel
+ * @description Left-column panel containing all user inputs for the MDR calculator.
+ *
+ * Sections:
+ * 1. **Customer organisation** — three sliders (employees, endpoints, phones)
+ *    with quadratic scale (`scale={2}`) for better precision at lower volumes.
+ * 2. **Device/user summary** — computed totals displayed in a compact card.
+ * 3. **M365 discount** — pill selector (hidden in presentation mode).
+ * 4. **Azure Workloads** — toggle + five compact sliders (dark blue theme)
+ *    with per-resource discount pills.
+ * 5. **Total offer** — bottom summary card with optional discount highlight.
+ */
 import { C, CARD, SECTION_LABEL, FLEX_BETWEEN, fmt } from '../../shared/theme'
 import Slider from '../../shared/components/Slider'
 import DiscountPills from '../../shared/components/DiscountPills'
 import Toggle from '../../shared/components/Toggle'
 
+/**
+ * @param {Object} props
+ * @param {ReturnType<import('./useCalculator').useCalculator>} props.calc
+ *   The full return value of {@link useCalculator}, destructured internally.
+ * @returns {JSX.Element}
+ */
 export default function InputPanel({ calc }) {
   const {
     employees, setEmployees, endpoints, setEndpoints, phones, setPhones,

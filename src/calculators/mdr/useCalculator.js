@@ -1,6 +1,30 @@
+/**
+ * @module calculators/mdr/useCalculator
+ * @description Custom React hook encapsulating all MDR calculator state and derived computations.
+ *
+ * Manages three state groups:
+ * - **Customer environment** — employee count, endpoints, phones (slider-driven).
+ * - **Azure workloads** — toggle + per-resource quantities.
+ * - **UI controls** — discount percentages, active tab, presentation mode.
+ *
+ * All pricing math is memoised via `useMemo` so the component tree only
+ * re-renders when an input actually changes.
+ */
 import { useState, useMemo, useEffect } from 'react'
 import { M365_PRICE_LINES, AZURE_PRICE_LINES } from './config'
 
+/**
+ * Calculate list-price and discounted totals for a set of price lines.
+ *
+ * @param {Array<{label: string, price: number, qty: number, unit: string}>} lines
+ *   Enriched price lines (qty already resolved from slider/input values).
+ * @param {number} discountPct - Discount percentage (0–20).
+ * @returns {{
+ *   listTotal: number,
+ *   total: number,
+ *   details: Array<{label: string, price: number, qty: number, unit: string, listAnnual: number, discPrice: number, annual: number}>
+ * }} Section totals and per-line detail objects.
+ */
 function calcSection(lines, discountPct) {
   let listTotal = 0
   let total = 0
@@ -15,6 +39,31 @@ function calcSection(lines, discountPct) {
   return { listTotal, total, details }
 }
 
+/**
+ * Custom hook providing all state, setters, and computed values for the MDR calculator.
+ *
+ * @returns {{
+ *   employees: number, setEmployees: Function,
+ *   endpoints: number, setEndpoints: Function,
+ *   phones: number, setPhones: Function,
+ *   includeAzure: boolean, setIncludeAzure: Function,
+ *   azureVMs: number, setAzureVMs: Function,
+ *   azureAppSvc: number, setAzureAppSvc: Function,
+ *   azureSQL: number, setAzureSQL: Function,
+ *   azureStorage: number, setAzureStorage: Function,
+ *   azureAKS: number, setAzureAKS: Function,
+ *   m365Discount: number, setM365Discount: Function,
+ *   azureDiscount: number, setAzureDiscount: Function,
+ *   activeTab: string, setActiveTab: Function,
+ *   presentationMode: boolean, setPresentationMode: Function,
+ *   tabDefs: Array<{id: string, label: string}>,
+ *   users: number, totalDevices: number,
+ *   m365: {listTotal: number, total: number, details: Array},
+ *   azure: {listTotal: number, total: number, details: Array},
+ *   listTotal: number, offerTotal: number,
+ *   totalDiscountKr: number, totalDiscountPct: number, hasAnyDiscount: boolean,
+ * }}
+ */
 export function useCalculator() {
   /* Customer environment */
   const [employees, setEmployees] = useState(500)

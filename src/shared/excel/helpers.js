@@ -1,7 +1,19 @@
-/* ─── Excel formatting constants ─────────────────────────── */
+/**
+ * @module shared/excel/helpers
+ * @description Reusable ExcelJS formatting utilities for building branded workbooks.
+ *
+ * These helpers produce consistently styled rows (headers, data, sums, totals)
+ * using the SoftwareOne color scheme. They are pure functions with no component
+ * state — any calculator can use them to build its own Excel export.
+ */
+
+/** ExcelJS number format for Norwegian kroner. */
 export const NOK_FMT = '#,##0 "NOK"'
+
+/** ExcelJS number format for percentages. */
 export const PCT_FMT = '0%'
 
+/** ARGB hex colors for Excel cells (no leading #, as ExcelJS expects). */
 export const XL_COLORS = {
   black:   '000000',
   textSec: '555555',
@@ -11,13 +23,22 @@ export const XL_COLORS = {
   white:   'FFFFFF',
 }
 
-/* ─── Excel helper functions ─────────────────────────────── */
-
+/**
+ * Create a thin gray border object for all four cell edges.
+ * @returns {import('exceljs').Borders}
+ */
 export function xlBorders() {
   const b = { style: 'thin', color: { argb: XL_COLORS.gray30 } }
   return { top: b, bottom: b, left: b, right: b }
 }
 
+/**
+ * Format a full-width section header row (black background, white text).
+ * @param {import('exceljs').Worksheet} ws - Target worksheet.
+ * @param {number} row - Row number (1-indexed).
+ * @param {string} text - Header text (placed in column 1).
+ * @param {number} cols - Total number of columns to fill.
+ */
 export function xlSectionHeader(ws, row, text, cols) {
   const r = ws.getRow(row)
   for (let c = 1; c <= cols; c++) {
@@ -28,6 +49,12 @@ export function xlSectionHeader(ws, row, text, cols) {
   r.height = 24
 }
 
+/**
+ * Format a table header row (gray background, bold text, right-aligned from col 3+).
+ * @param {import('exceljs').Worksheet} ws
+ * @param {number} row
+ * @param {string[]} headers - Column header labels.
+ */
 export function xlTableHeader(ws, row, headers) {
   const r = ws.getRow(row)
   const borders = xlBorders()
@@ -42,6 +69,14 @@ export function xlTableHeader(ws, row, headers) {
   r.height = 22
 }
 
+/**
+ * Write a data row with optional NOK and percentage formatting.
+ * @param {import('exceljs').Worksheet} ws
+ * @param {number} row
+ * @param {Array} values - Cell values (one per column).
+ * @param {number[]} [nokCols=[]] - Column indices to format as NOK.
+ * @param {number[]} [pctCols=[]] - Column indices to format as percentage.
+ */
 export function xlDataRow(ws, row, values, nokCols = [], pctCols = []) {
   const r = ws.getRow(row)
   const borders = xlBorders()
@@ -56,6 +91,15 @@ export function xlDataRow(ws, row, values, nokCols = [], pctCols = []) {
   })
 }
 
+/**
+ * Format a subtotal row (gray10 background, bold label and value).
+ * @param {import('exceljs').Worksheet} ws
+ * @param {number} row
+ * @param {string} label - Row label (placed in column 2).
+ * @param {number} total - Total value.
+ * @param {number} cols - Number of columns to fill.
+ * @param {number} nokCol - Column index for the total value.
+ */
 export function xlSumRow(ws, row, label, total, cols, nokCol) {
   const r = ws.getRow(row)
   const borders = xlBorders()
@@ -71,6 +115,15 @@ export function xlSumRow(ws, row, label, total, cols, nokCol) {
   r.height = 22
 }
 
+/**
+ * Format a grand total row (black background, white bold text).
+ * @param {import('exceljs').Worksheet} ws
+ * @param {number} row
+ * @param {string} label
+ * @param {number} total
+ * @param {number} cols
+ * @param {number} nokCol
+ */
 export function xlTotalRow(ws, row, label, total, cols, nokCol) {
   const r = ws.getRow(row)
   const borders = xlBorders()
@@ -86,6 +139,15 @@ export function xlTotalRow(ws, row, label, total, cols, nokCol) {
   r.height = 26
 }
 
+/**
+ * Write all detail rows for a pricing section (SKU, name, qty, price, discount, annual).
+ * @param {import('exceljs').Worksheet} ws
+ * @param {number} startRow - First available row.
+ * @param {Array<{label: string, qty: number, price: number, discPrice: number, annual: number, unit?: string}>} details
+ * @param {number} discount - Discount percentage (0–100).
+ * @param {Object<string, {sku: string, name: string}>} skuMap - Maps labels to SKU codes.
+ * @returns {number} Next available row number.
+ */
 export function xlWriteOfferSection(ws, startRow, details, discount, skuMap) {
   let row = startRow
   for (const d of details) {
